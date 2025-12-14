@@ -1,0 +1,60 @@
+from collections import deque
+
+# Goal state for the 8-puzzle
+goal_state = (1, 2, 3,
+              4, 5, 6,
+              7, 8, 0)
+
+
+def get_neighbors(state):
+    neighbors = []
+    index = state.index(0)
+    row, col = index // 3, index % 3
+
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+
+    for move in moves:
+        new_row = row + move[0]
+        new_col = col + move[1]
+
+        if 0 <= new_row < 3 and 0 <= new_col < 3:
+            new_index = new_row * 3 + new_col
+            new_state = list(state)
+            new_state[index], new_state[new_index] = new_state[new_index], new_state[index]
+            neighbors.append(tuple(new_state))
+
+    return neighbors
+
+
+def bfs(start_state):
+    queue = deque([(start_state, [])])
+    visited = set()
+    visited.add(start_state)
+
+    while queue:
+        current_state, path = queue.popleft()
+
+        if current_state == goal_state:
+            return path + [current_state]
+
+        for neighbor in get_neighbors(current_state):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [current_state]))
+
+    return None
+
+
+if __name__ == '__main__':
+    start_state = (1, 2, 3,
+                   4, 0, 6,
+                   7, 5, 8)
+
+    solution = bfs(start_state)
+
+    if solution:
+        print(f"BFS Solution found in {len(solution) - 1} moves")
+        for step in solution:
+            print(step)
+    else:
+        print("No solution found using BFS")

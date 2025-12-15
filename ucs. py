@@ -1,0 +1,33 @@
+from queue import PriorityQueue
+
+goal_state = (1,2,3,4,5,6,7,8,0)
+
+def get_neighbors(state):
+ 
+    pass
+
+def ucs(start_state):
+    pq = PriorityQueue()
+    pq.put((0, start_state))
+
+    visited = set()
+    visited.add(start_state)
+
+    while not pq.empty():
+        cost, current = pq.get()
+
+        if current == goal_state:
+            print("Goal reached with cost:", cost)
+            return True
+
+        for neighbor in get_neighbors(current):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                pq.put((cost + 1, neighbor))
+
+    return False
+
+
+if __name__ == "__main__":
+    start = (1,2,3,4,0,5,6,7,8)
+    ucs(start)

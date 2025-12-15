@@ -11,6 +11,8 @@ This project solves the classic 8-Puzzle problem using different Artificial Inte
 - A* Search Algorithm
 - 
 ## Team Contribution
-- BFS & DFS implementation: Moneep shpel
+- BFS implementation: Moneep Shpel
+- DFS implementation: Ziad Medhat
 - UCS implementation: Karim Arafat
-- 
+- Greedy implementation: Ziad Magdy
+- A* implementation: Doaa Ahmed 

@@ -16,3 +16,9 @@ This project solves the classic 8-Puzzle problem using different Artificial Inte
 - UCS implementation: Karim Arafat
 - Greedy implementation: Ziad Magdy
 - A* implementation: Doaa Ahmed 
+## How to Run
+python bfs.py
+python dfs.py
+python ucs.py
+python greedy.py
+python astar.py

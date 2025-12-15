@@ -12,3 +12,5 @@ This project solves the classic 8-Puzzle problem using different Artificial Inte
 - 
 ## Team Contribution
 - BFS & DFS implementation: Moneep shpel
+- UCS implementation: Karim Arafat
+- 

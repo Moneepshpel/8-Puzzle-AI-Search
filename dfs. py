@@ -1,58 +1,68 @@
-# Goal state for the 8-puzzle
-goal_state = (1, 2, 3,
-              4, 5, 6,
-              7, 8, 0)
+# Define the target configuration (Goal State)
+# 0 represents the empty space (blank tile)
+GOAL_STATE = (1, 2, 3, 4, 5, 6, 7, 8, 0)
 
-  
 def get_neighbors(state):
+    """Finds all possible moves from the current state."""
     neighbors = []
-    index = state.index(0)
-    row, col = index // 3, index % 3
+    state_list = list(state)
+    zero_idx = state_list.index(0)
+    row, col = divmod(zero_idx, 3)
 
-    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
-
-    for move in moves:
-        new_row = row + move[0]
-        new_col = col + move[1]
-
-        if 0 <= new_row < 3 and 0 <= new_col < 3:
-            new_index = new_row * 3 + new_col
-            new_state = list(state)
-            new_state[index], new_state[new_index] = new_state[new_index], new_state[index]
+    # Possible movements: Up, Down, Left, Right
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    for dr, dc in moves:
+        r, c = row + dr, col + dc
+        if 0 <= r < 3 and 0 <= c < 3:
+            new_idx = r * 3 + c
+            new_state = state_list[:]
+            # Swap the blank tile with the adjacent number
+            new_state[zero_idx], new_state[new_idx] = new_state[new_idx], new_state[zero_idx]
             neighbors.append(tuple(new_state))
-
     return neighbors
 
-
-def dfs(start_state, depth_limit=50):
+def solve_dfs(start_state):
+    """Solves the puzzle using Depth-First Search algorithm."""
+    # Stack stores: (current_state, path_taken)
+    # Using a list as a stack (Last-In, First-Out)
     stack = [(start_state, [])]
-    visited = set()
+    visited = {start_state}
 
     while stack:
+        # .pop() removes the last element added, which creates the "Deep" search
         current_state, path = stack.pop()
 
-        if current_state == goal_state:
+        # Check if we reached the goal
+        if current_state == GOAL_STATE:
             return path + [current_state]
 
-        if len(path) < depth_limit:
-            visited.add(current_state)
-            for neighbor in get_neighbors(current_state):
-                if neighbor not in visited:
-                    stack.append((neighbor, path + [current_state]))
-
+        # Explore neighbors
+        for neighbor in get_neighbors(current_state):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                # Add the neighbor to the top of the stack
+                stack.append((neighbor, path + [current_state]))
     return None
 
+def display_board(state):
+    """Prints the board in a 3x3 format."""
+    for i in range(0, 9, 3):
+        print(state[i:i+3])
+    print("-" * 15)
 
-if __name__ == '__main__':
-    start_state = (1, 2, 3,
-                   4, 0, 6,
-                   7, 5, 8)
+# --- Execution ---
 
-    solution = dfs(start_state)
+# Example starting state
+initial_state = (1, 2, 3, 4, 0, 6, 7, 5, 8)
 
-    if solution:
-        print(f"DFS Solution found in {len(solution) - 1} moves")
-        for step in solution:
-            print(step)
-    else:
-        print("No solution found using DFS")
+print("Searching for solution using DFS...")
+solution_path = solve_dfs(initial_state)
+
+if solution_path:
+    # Warning: For DFS, this number can be very large!
+    print(f"Success! Found solution in {len(solution_path) - 1} steps:")
+    # We display only the last state to avoid a massive wall of text
+    display_board(solution_path[-1])
+else:
+    print("No solution found.")

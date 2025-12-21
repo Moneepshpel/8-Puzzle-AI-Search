@@ -15,28 +15,81 @@ The 8-Puzzle is a classic sliding puzzle consisting of a 3x3 board with 8 number
 ### 1. Breadth-First Search (BFS)
 - Explores all nodes at the current depth before moving deeper.
 - Guarantees the shortest solution.
+- Time Complexity: O(b^d)
+- Space Complexity: O(b^d)
+- b : branching factor (number of  - possible moves, max = 4 in 8-      puzzle)
+- d : depth of the shallowest        (optimal) solution
 
+Notes:
+- Explores the search tree level by level.
+- Guarantees the shortest path in terms of number of moves.
+- High memory consumption due to storing all nodes at each level.
+ 
 ### 2. Depth-First Search (DFS)
 - Explores as deep as possible along each branch before backtracking.
 - May not find the shortest path and can use less memory.
+  
+- Time Complexity: O(b^m)
+- Space Complexity: O(b*m)
+
+- b : branching factor (number of  - possible moves, max = 4 in 8-      puzzle)
+- m : maximum depth of the search    tree
+
+Notes:
+- DFS does NOT guarantee the shortest solution.
+- Uses less memory than BFS.
+  
 
 ### 3. Uniform Cost Search (UCS)
 - Expands the node with the lowest path cost.
 - Guarantees optimal solution if cost is uniform.
+  
+- Time Complexity: O(b^(C*/ε))
+- Space Complexity: O(b^(C*/ε))
+
+- b  : branching factor
+- C* : cost of the optimal solution
+- ε  : minimum step cost
+
+Notes:
+- Guarantees optimal solution.
+- Slower than BFS when costs vary.
 
 ### 4 . Greedy Search
 
-Uses a heuristic to select the node that seems closest to the goal.
+- Uses a heuristic to select the node that seems closest to the goal.
 
-Does not guarantee the shortest path, but often faster than BFS or DFS.
+- Does not guarantee the shortest path, but often faster than BFS or DFS.
+Common heuristics: misplaced tiles, Manhattan distance
+ 
+- Time Complexity: O(b^m)
+- Space Complexity: O(b^m)
 
-Common heuristics: misplaced tiles, Manhattan distance 
+- b : branching factor
+- m : maximum depth
+
+Notes:
+- Uses heuristic function h(n) only.
+- Fast but NOT optimal.
+- May get stuck in loops or bad paths.
+"""
 
 ### 5. A* Search
 - Uses heuristics to estimate the cost to goal.
 - More efficient; finds the optimal solution faster.
 - Common heuristics: misplaced tiles, Manhattan distance.
 
+- Time Complexity: O(b^d)
+- Space Complexity: O(b^d)
+
+- b : branching factor
+- d : depth of optimal solution
+
+Notes:
+- Uses f(n) = g(n) + h(n)
+- Guarantees optimal solution if heuristic is admissible.
+- Very memory intensive.
+  
 ## Project Structure
 8-Puzzle-AI/
 

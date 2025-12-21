@@ -1,33 +1,74 @@
-from queue import PriorityQueue
- 
-goal_state = (1,2,3,4,5,6,7,8,0)
+import heapq
+
+# Define the target configuration
+# 0 represents the empty space (blank tile)
+GOAL_STATE = (1, 2, 3, 4, 5, 6, 7, 8, 0)
 
 def get_neighbors(state):
- 
-    pass 
+    """Finds all possible moves from the current state."""
+    neighbors = []
+    state_list = list(state)
+    zero_idx = state_list.index(0)
+    row, col = divmod(zero_idx, 3)
 
-def ucs(start_state):
-    pq = PriorityQueue()
-    pq.put((0, start_state))
+    # Possible movements: Up, Down, Left, Right
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    
+    for dr, dc in moves:
+        r, c = row + dr, col + dc
+        if 0 <= r < 3 and 0 <= c < 3:
+            new_idx = r * 3 + c
+            new_state = state_list[:]
+            # Swap the blank tile with the adjacent number
+            new_state[zero_idx], new_state[new_idx] = new_state[new_idx], new_state[zero_idx]
+            neighbors.append(tuple(new_state))
+    return neighbors
 
-    visited = set()
-    visited.add(start_state)
+def solve_ucs(start_state):
+    """Solves the puzzle using Uniform Cost Search algorithm."""
+    # Priority Queue stores: (cost, current_state, path_taken)
+    # In 8-puzzle, cost is the number of steps taken
+    priority_queue = [(0, start_state, [])]
+    
+    # Dictionary to keep track of the minimum cost to reach each state
+    visited = {start_state: 0}
 
-    while not pq.empty():
-        cost, current = pq.get()
+    while priority_queue:
+        # Pop the state with the lowest cost
+        cost, current_state, path = heapq.heappop(priority_queue)
 
-        if current == goal_state:
-            print("Goal reached with cost:", cost)
-            return True
+        # Check if we reached the goal
+        if current_state == GOAL_STATE:
+            return path + [current_state]
 
-        for neighbor in get_neighbors(current):
-            if neighbor not in visited:
-                visited.add(neighbor)
-                pq.put((cost + 1, neighbor))
+        # Explore neighbors
+        for neighbor in get_neighbors(current_state):
+            new_cost = cost + 1 # Each move has a cost of 1
+            
+            # If neighbor hasn't been visited or we found a cheaper path to it
+            if neighbor not in visited or new_cost < visited[neighbor]:
+                visited[neighbor] = new_cost
+                heapq.heappush(priority_queue, (new_cost, neighbor, path + [current_state]))
+                
+    return None
 
-    return False
+def display_board(state):
+    """Prints the board in a 3x3 format."""
+    for i in range(0, 9, 3):
+        print(state[i:i+3])
+    print("-" * 15)
 
+# --- Execution ---
 
-if __name__ == "__main__":
-    start = (1,2,3,4,0,5,6,7,8)
-    ucs(start)
+# Example starting state:
+initial_state = (1, 2, 3, 4, 0, 6, 7, 5, 8)
+
+print("Searching for solution using UCS...")
+solution_path = solve_ucs(initial_state)
+
+if solution_path:
+    print(f"Success! Found optimal solution in {len(solution_path) - 1} steps:")
+    for step in solution_path:
+        display_board(step)
+else:
+    print("No solution found.")
